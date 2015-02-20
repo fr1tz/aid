@@ -1,0 +1,1 @@
+AID's hostapp command will create a clean directory for temporary files and bind it to /tmp.
