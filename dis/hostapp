@@ -1,22 +1,22 @@
 #!/dis/sh.dis
 
 load std
-hostappdir = ${hd $*}
-hostappcmd = ${tl $*}
+HOSTAPPDIR = ${hd $*}
+HOSTAPPCMD = ${tl $*}
 if { ~ $emuhost Nt  } {
+	HOSTAPPDIR = `{echo -n $hostappdir | sed 's!\\!/!g'}
 	hosttmpdir = 'c:/temp'
-	hostappdir = `{echo -n $hostappdir | sed 's!\\!/!g'}
+	apptmpdir = /n/tmp/aid.`{cat /dev/time}.`{echo ${join '_' $HOSTAPPCMD} | sed 's!/!_!g'}
 	bind -c '#U'^$hosttmpdir /n/tmp || raise fail:bind_host_tmp_dir
 	bind -c '#U'^$hostappdir /n/app || raise fail:bind_host_app_dir
 	bind -c /n/tmp /tmp || raise fail:bind_app_tmp_dir
 } {
 	hosttmpdir = /tmp
-	apptmpdir = /n/tmp/aid.$emupid.`{echo ${join '_' $hostappcmd} | sed 's!/!_!g'}
+	apptmpdir = /n/tmp/aid.$emupid.`{echo ${join '_' $HOSTAPPCMD} | sed 's!/!_!g'}
 	bind -c '#U*'^$hosttmpdir /n/tmp || raise fail:bind_host_tmp_dir
-	bind -c '#U*'^$hostappdir /n/app || raise fail:bind_host_app_dir
+	bind -c '#U*'^$HOSTAPPDIR /n/app || raise fail:bind_host_app_dir
 	mkdir $apptmpdir || raise fail:mk_app_tmp_dir
 	bind -c $apptmpdir /tmp || raise fail:bind_app_tmp_dir
 }
-hosttmpdir=''
-apptmpdir=''
-/n/app/${hd $hostappcmd} ${tl $hostappcmd}
+rm /env/hosttmpdir /env/apptmpdir
+/n/app/${hd $HOSTAPPCMD} ${tl $HOSTAPPCMD}
