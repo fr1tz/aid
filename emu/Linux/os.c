@@ -35,6 +35,7 @@ char *hosttype = "Linux";
 typedef sem_t	Sem;
 
 extern int dflag;
+extern int emupid;
 
 int	gidnobody = -1;
 int	uidnobody = -1;
@@ -216,6 +217,8 @@ libinit(char *imod)
 
 	p->env->uid = getuid();
 	p->env->gid = getgid();
+
+	emupid = getpid();
 
 	emuinit(imod);
 }

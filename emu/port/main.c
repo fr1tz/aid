@@ -26,6 +26,7 @@ extern	int	mflag;
 	int	xtblbit;
 	ulong	displaychan;
 char *cputype;
+int emupid = -1;
 
 static void
 usage(void)
@@ -318,6 +319,11 @@ emuinit(void *imod)
 		if(getwd(wdir, 1024) != nil)
 			putenvq("emuwdir", wdir, 1);
 		free(wdir);
+	}
+	if(emupid != -1){
+		char* pid = smprint("%d", emupid);
+		ksetenv("emupid", pid, 1);
+		free(pid);		
 	}
 
 	kproc("main", disinit, imod, KPDUPFDG|KPDUPPG|KPDUPENVG);
